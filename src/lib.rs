@@ -28,6 +28,7 @@ pub mod global_fns;
 pub mod globals;
 pub mod init_globals;
 pub mod macros;
+pub mod adts
 
 pub use holochain_wasm_utils::api_serialization::validation::*;
 
@@ -35,3 +36,4 @@ pub mod meta;
 
 pub use api::*;
 pub use holochain_core_types::validation::*;
+pub use adts::*;
