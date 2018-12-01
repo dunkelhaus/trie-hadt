@@ -60,6 +60,9 @@ define_zome! {
      - Adds provided string to the trie. 
      - Also adds link from anchor of type `category` to root of string. anchorText is `string` itself, or `id` if provided.
 
+ - drop(string)
+     - A soft delete, just removes the terminator link that designates the word, but retains the TrieNodes it used in case they are in use for other `string`s, or some other reason.
+
  - delete(string, [category], [id])
      - Removes string from trie.
      - Also destroys links from anchorType - `id` needed if specified id was different from standard lookup (by `string`).
