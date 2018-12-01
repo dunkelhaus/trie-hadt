@@ -7,7 +7,7 @@
  - This HDK provides a wrapper to abstract the low-levels of using the Holograph data structure proposed by Holochain as a Trie. 
  - Accepts a string, the term itself, and grafts it onto the tree in the prefix-searchable manner. 
  - Categorizes the terms with keys, and a `categoryString` to them, which can be used in a different form of lookup (or a dump, since getting all the words from the trie requires BFS/DFS or some other exhaustive search).
-     - This is implemented in the backend with anchors.
+     - The categorization is implemented in the backend with anchors.
 
 ## Usage
 First, [Rust](https://www.rust-lang.org/en-US/install.html) must be installed on your computer.
