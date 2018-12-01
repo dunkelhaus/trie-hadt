@@ -35,7 +35,9 @@ extern crate hadt;
 
 define_zome! {
     entries: [
-        hadt::entries::definitions()
+		hadt::entries::defineTrie(),
+		hadt::entries::defineTrieNode(),
+		hadt::entries::defineNull()
     ]
 
     genesis: || {
