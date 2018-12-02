@@ -1,5 +1,5 @@
 [package]
-name = "radix-tree-hdk"
+name = "trie-hadt"
 version = "0.0.1"
 authors = ["Suraj Jena <jena.suraj.k@gmail.com>"]
 

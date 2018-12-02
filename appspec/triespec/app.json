@@ -1,9 +1,9 @@
 {
-  "name": "Holochain App Name",
-  "description": "A Holochain app",
+  "name": "triespec",
+  "description": "A hApp to showcase workings of the Trie HADT",
   "authors": [
     {
-      "indentifier": "Author Name <author@name.com>",
+      "indentifier": "Suraj Jena <jena.suraj.k@gmail.com>",
       "public_key_source": "",
       "signature": ""
     }
