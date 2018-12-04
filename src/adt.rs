@@ -53,13 +53,8 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
     {
         match get_links(&traverser, data[i])
         {
-            Ok(t) => {
-                traverser = t[0];
-                continue;
-            },
-            Err(e) => {
-                levelpeg = i;
-            },
+            Ok(t) => { traverser = t[0]; continue; },
+            Err(e) => { levelpeg = i; break; },
         }
     }
 
@@ -69,11 +64,7 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
             data: data[j],
             level: j,
         };
-        if j == data.len() + 1
-        {
-            node.data = "\0";
-            node.level = -2;
-        }
+        if j == data.len() + 1 { node.data = "\0"; node.level = -2; }
         match commit_entry(&node)
         {
             Ok(address) => {
@@ -87,10 +78,7 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
                 }
                 match link_entries(&traverser, &address, data[j])
                 {
-                    Ok(t) => {
-                        traverser = address;
-                        continue;
-                    },
+                    Ok(t) => { traverser = address; continue; },
                     Err(e) => { return Err("Linking nodes failed in insert with error {:?}.", e); },
                 }
             },
