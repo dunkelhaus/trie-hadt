@@ -115,9 +115,22 @@ pub fn delete(data: str, category: Option<str>, id: Option<i32>) -> Result<()>
 ///     - Looks for the string in the trie - returns `true` if found
 ///       and `false` if not.
 ///
-pub fn lookup(data: str) -> Result<bool>
+pub fn lookup(data: String) -> Result<bool, String>
 {
+    for i in 0..data.len()
+    {
+        match get_links(&traverser, data[i])
+        {
+            Ok(t) => { traverser = t[0]; continue; },
+            Err(e) => { return Err("Failed locating part of the word."); },
+        }
+    }
 
+    match get_links(&traverser, data)
+    {
+        Ok(t) => { Ok(true) }.
+        Err(e) => { Err("No null terminator found.") }.
+    }
 }
 
 /// The find() function for each word - manual category lookup.
