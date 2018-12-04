@@ -44,9 +44,9 @@ pub fn defineTrie() -> ValidatingEntryType
             hdk::ValidationPackageDefinition::ChainFull
         },
 
-        validation: |post: Post, _ctx: hdk::ValidationData| {
-            (post.content.len() < 280)
-                .ok_or_else(|| String::from("Content too long"))
+        validation: |trie: Trie, _ctx: hdk::ValidationData| {
+            (trie.data.len() < 100)
+                .ok_or_else(|| String::from("Trie name's too long."))
         }
     )
 }
@@ -63,9 +63,9 @@ pub fn defineTrieNode() -> ValidatingEntryType
             hdk::ValidationPackageDefinition::ChainFull
         },
 
-        validation: |post: Post, _ctx: hdk::ValidationData| {
-            (post.content.len() < 280)
-                .ok_or_else(|| String::from("Content too long"))
+        validation: |trieNode: TrieNode, _ctx: hdk::ValidationData| {
+            (trieNode.data.len() < 2)
+                .ok_or_else(|| String::from("TrieNode char's too long. Should be one character only."))
         }
     )
 }
@@ -84,9 +84,9 @@ pub fn defineNull(bucketing: bool) -> ValidatingEntryType
                 hdk::ValidationPackageDefinition::ChainFull
             },
 
-            validation: |post: Post, _ctx: hdk::ValidationData| {
-                (post.content.len() < 280)
-                    .ok_or_else(|| String::from("Content too long"))
+            validation: |nullTerm: NullTerm, _ctx: hdk::ValidationData| {
+                (nullTerm.data.size_of() < 32)
+                    .ok_or_else(|| String::from("NullTerm's content is too large - limit is 32 bytes."))
             }
         ),
         false => entry!(
@@ -99,9 +99,9 @@ pub fn defineNull(bucketing: bool) -> ValidatingEntryType
                 hdk::ValidationPackageDefinition::ChainFull
             },
 
-            validation: |post: Post, _ctx: hdk::ValidationData| {
-                (post.content.len() < 280)
-                    .ok_or_else(|| String::from("Content too long"))
+            validation: |null: Null, _ctx: hdk::ValidationData| {
+                (null.data.len() < 2)
+                    .ok_or_else(|| String::from("Null string too long. HADT Error."))
             }
         )
     }
