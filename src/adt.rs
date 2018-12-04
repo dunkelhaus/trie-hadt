@@ -33,9 +33,9 @@ pub fn Trie(type: str, bucketing: bool) -> Result<JsonString, String>
 ///     - Also adds link from anchor of type `category` to root of string.
 ///       anchorText is `string` itself, or `id` if provided.
 ///
-pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32>) -> Result<JsonString, String>
+pub fn insert(entryHash: Address, data: String, category: Option<str>, id: Option<i32>) -> Result<JsonString, String>
 {
-    match get_entry(name)
+    match get_entry(entryHash)
     {
         Ok(t) => {
             match t
@@ -46,15 +46,16 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
         },
         Err(e) => { panic!("Issue with get_entry() with finding root with error: {:?}.", e) },
     }
-    let mut levelpeg: i32 = 0;
-    let mut traverser: Address = name;
+
+    let levelpeg: i32 = 0;
+    let mut traverser: Address = entryHash;
 
     for i in 0..data.len()
     {
         match get_links(&traverser, data[i])
         {
             Ok(t) => { traverser = t[0]; continue; },
-            Err(e) => { levelpeg = i; break; },
+            Err(e) => { let levelpeg = i; break; }, // shadow levelpeg so the Rust compiler completely forgets about the previous declaration.
         }
     }
 
@@ -65,7 +66,8 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
             level: j,
         };
         if j == data.len() + 1 { node.data = "\0"; node.level = -2; }
-        match commit_entry(&node)
+        // Was previously &node
+        match commit_entry(node) // Why not just have the code_base take the ownership of node? If it's going to be re-initialized.
         {
             Ok(address) => {
                 if j == data.len() + 1
@@ -115,21 +117,25 @@ pub fn delete(data: str, category: Option<str>, id: Option<i32>) -> Result<()>
 ///     - Looks for the string in the trie - returns `true` if found
 ///       and `false` if not.
 ///
-pub fn lookup(data: String) -> Result<bool, String>
+pub fn lookup(data: str) -> Result<bool>
 {
+    let mut traverser: Address = entryHash;
+
     for i in 0..data.len()
     {
+        // Returns the Vec<> of addresses attached to that tag.
+        // At the moment, we are considering that all tags has only one element in Vec.
         match get_links(&traverser, data[i])
         {
-            Ok(t) => { traverser = t[0]; continue; },
-            Err(e) => { return Err("Failed locating part of the word."); },
+            // Assuming Trie does not have any collisions.
+            Ok(t) => { traverser = t[0];
+                        if i == data.len(){
+                            // If no Err was detected; then, given String to lookup() has been found.
+                            return true;
+                        };
+                        continue; },
+            Err(e) => { let levelpeg = i; break; }, // shadow levelpeg so the Rust compiler completely forgets about the previous declaration.
         }
-    }
-
-    match get_links(&traverser, data)
-    {
-        Ok(t) => { Ok(true) }.
-        Err(e) => { Err("No null terminator found.") }.
     }
 }
 
