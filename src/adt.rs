@@ -46,8 +46,8 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
         },
         Err(e) => { panic!("Issue with get_entry() with finding root with error: {:?}.", e) },
     }
-    let levelpeg: i32 = 0;
-    let traverser: Address = name;
+    let mut levelpeg: i32 = 0;
+    let mut traverser: Address = name;
 
     for i in 0..data.len()
     {
