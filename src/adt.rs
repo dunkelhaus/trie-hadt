@@ -95,7 +95,11 @@ pub fn insert(name: Address, data: String, category: Option<str>, id: Option<i32
 ///
 pub fn drop(data: str) -> Result<()>
 {
-
+    match lookupForDrop(data){
+        // The lookUpForDrop() won't work; please, check the code base for lookUpForDrop().
+        Ok(hasData) => lookUpForDrop(),
+        Err(noFound) => println!("No data to drop."),
+    }
 }
 
 /// The delete() function for each word - hard delete.
@@ -129,7 +133,32 @@ pub fn lookup(data: String) -> Result<bool, String>
     match get_links(&traverser, data)
     {
         Ok(t) => { Ok(true) }.
-        Err(e) => { Err("No null terminator found.") }.
+        Err(e) => { Err("No null terminator found.") }//. <-  Why is that there?
+    }
+}
+
+// Rust does not support function overloading.
+// @data - User specified string, which will be used to traverse through Trie.
+// @baseHashArgument - baseHash for get_links to start traversing through the Trie.
+// author - Lee
+pub fn lookUpForDrop(data: String, baseHashArgument: Address) -> Result<bool, String>
+{
+    // Assuming the base hash for the get_links() gets passed in.
+    let mut entryHash = baseHashArgument;
+    for i in 0..data.len()+1 // +1 added to iterate over the null-terminator.
+    {
+        match get_links(&entryHash, data[i])
+        {
+            Ok(t) => {
+                if data[i] == "\0"{
+                    // "Not Yet available."
+                    // https://holochain.github.io/rust-api/0.0.1/hdk/fn.remove_entry.html
+                    remove_entry(&entryHash, "Not sure what the message is suppose to be.")
+                }
+                entryHash = t[0];
+                continue; },
+            Err(e) => { return Err("Failed locating part of the word."); },
+        }
     }
 }
 
